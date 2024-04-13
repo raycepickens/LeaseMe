@@ -1,0 +1,68 @@
+﻿@page "/post"
+@using LeaseMe.Components.Data
+@using System.Net.Http
+@using System.Net.Http.Json
+
+<h3>Create Lease</h3>
+
+<div>
+    <label>Poster:</label>
+    <input type="text" @bind="newLease.Poster" />
+</div>
+<div>
+    <label>Contact:</label>
+    <input type="text" @bind="newLease.Contact" />
+</div>
+<div>
+    <label>Image ID:</label>
+    <input type="text" @bind="newLease.ImgId" />
+</div>
+<div>
+    <label>Property Info:</label>
+    <input type="text" @bind="newLease.PropertyInfo" />
+</div>
+<div>
+    <label>Price:</label>
+    <input type="number" @bind="newLease.Price" />
+</div>
+<div>
+    <label>Lease Period:</label>
+    <input type="text" @bind="newLease.LeasePeriod" />
+</div>
+<div>
+    <label>Property Name:</label>
+    <input type="text" @bind="newLease.PropertyName" />
+</div>
+
+<button @onclick="CreateLease">Create Lease</button>
+
+@code {
+    private Lease newLease = new Lease();
+    private HttpClient httpClient = new HttpClient();
+
+    private async Task CreateLease()
+    {
+        try
+        {
+            // Make POST request to FastAPI endpoint
+            var response = await httpClient.PostAsJsonAsync("http://localhost:8000/leases/", newLease);
+
+            // Check if the request was successful
+            if (response.IsSuccessStatusCode)
+            {
+                // Lease created successfully, you can display a success message or perform other actions
+                Console.WriteLine("Lease created successfully!");
+            }
+            else
+            {
+                // Error handling: Display error message or perform other actions
+                Console.WriteLine("Error creating lease: " + response.ReasonPhrase);
+            }
+        }
+        catch (Exception ex)
+        {
+            // Exception handling: Display error message or perform other actions
+            Console.WriteLine("Exception: " + ex.Message);
+        }
+    }
+}

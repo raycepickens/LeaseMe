@@ -1,0 +1,40 @@
+﻿@page "/view"
+@using LeaseMe.Components.Data
+@using System.Collections.Generic
+@using System.Net.Http.Json
+
+<h3>Display Leases</h3>
+
+@if (leases != null && leases.Any())
+{
+    @foreach (var lease in leases)
+    {
+        <div>
+            @lease.ToString()
+        </div>
+        <hr />
+    }
+}
+else
+{
+    <p>No leases available.</p>
+}
+
+@code {
+    private List<Lease> leases = new List<Lease>();
+    private HttpClient httpClient = new HttpClient();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Make GET request to FastAPI endpoint to retrieve leases
+            leases = await httpClient.GetFromJsonAsync<List<Lease>>("http://localhost:8000/leases/");
+        }
+        catch (Exception ex)
+        {
+            // Error handling: Display error message or perform other actions
+            Console.WriteLine("Exception: " + ex.Message);
+        }
+    }
+}
